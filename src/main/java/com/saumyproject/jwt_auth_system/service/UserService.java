@@ -1,8 +1,12 @@
 package com.saumyproject.jwt_auth_system.service;
 import com.saumyproject.jwt_auth_system.dto.RegisterRequest;
+import com.saumyproject.jwt_auth_system.dto.UserResponse;
 import com.saumyproject.jwt_auth_system.entity.Role;
 import com.saumyproject.jwt_auth_system.entity.User;
 import com.saumyproject.jwt_auth_system.repository.UserRepository;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,4 +39,10 @@ public class UserService {
 
         return user;
     }
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+            .stream()
+            .map(user -> new UserResponse(user.getId(), user.getName()))
+            .toList();
+}
 }
