@@ -8,19 +8,31 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
 
-    public User registerUser(RegisterRequest request) {
+   public User registerUser(RegisterRequest request) {
 
         User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(request.getPassword()) // ⚠️ encryption later
-                .role(Role.USER)
-                .build();
+            .name(request.getName())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .role(Role.USER)
+            .build();
 
         return userRepository.save(user);
+    }
+    public User loginUser(String email, String password) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return user;
     }
 }

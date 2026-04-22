@@ -1,5 +1,6 @@
 package com.saumyproject.jwt_auth_system.controller;
 
+import com.saumyproject.jwt_auth_system.dto.LoginRequest;
 import com.saumyproject.jwt_auth_system.dto.RegisterRequest;
 import com.saumyproject.jwt_auth_system.entity.User;
 import com.saumyproject.jwt_auth_system.service.UserService;
@@ -17,5 +18,9 @@ public class AuthController {
     @PostMapping("/register")
     public User register(@Valid @RequestBody RegisterRequest request) {
         return userService.registerUser(request);
+    }
+    @PostMapping("/login")
+    public User login(@RequestBody LoginRequest request) {
+        return userService.loginUser(request.getEmail(), request.getPassword());
     }
 }
