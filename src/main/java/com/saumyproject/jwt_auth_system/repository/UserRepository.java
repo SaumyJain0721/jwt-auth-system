@@ -1,9 +1,10 @@
 package com.saumyproject.jwt_auth_system.repository;
 
-import com.saumyproject.jwt_auth_system.entity.User;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import com.saumyproject.jwt_auth_system.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
