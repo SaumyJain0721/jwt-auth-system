@@ -14,6 +14,10 @@ public class LoginResponse {
         this.name = name;
     }
 
+    public LoginResponse(String token) {
+        this.token = token;
+    }
+
     public String getMessage() { return message; }
     public String getToken() { return token; }
     public Long getId() { return id; }

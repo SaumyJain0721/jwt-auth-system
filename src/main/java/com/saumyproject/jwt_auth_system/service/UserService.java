@@ -10,6 +10,7 @@ import com.saumyproject.jwt_auth_system.dto.RegisterRequest;
 import com.saumyproject.jwt_auth_system.dto.UserResponse;
 import com.saumyproject.jwt_auth_system.entity.User;
 import com.saumyproject.jwt_auth_system.repository.UserRepository;
+import com.saumyproject.jwt_auth_system.security.JwtService;;
 
 @Service
 public class UserService {
@@ -17,6 +18,8 @@ public class UserService {
     private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JwtService jwtService;
     
     public User registerUser(RegisterRequest request) {
 
@@ -38,6 +41,7 @@ public class UserService {
             .map(user -> new UserResponse(user.getId(), user.getName()))
             .toList();
     }
+
     public LoginResponse loginUser(String email, String password) {
 
         User user = userRepository.findByEmail(email)
@@ -47,11 +51,7 @@ public class UserService {
             throw new RuntimeException("Invalid password");
         }
 
-        return new LoginResponse(
-                "Login successful",
-                "dummy-token", // JWT later
-                user.getId(),
-                user.getName()
-        );
+        String token = jwtService.generateToken(user.getEmail());
+        return new LoginResponse(token);
     }
 }
