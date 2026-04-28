@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.saumyproject.jwt_auth_system.dto.LoginResponse;
 import com.saumyproject.jwt_auth_system.dto.RegisterRequest;
 import com.saumyproject.jwt_auth_system.dto.UserResponse;
+import com.saumyproject.jwt_auth_system.entity.Role;
 import com.saumyproject.jwt_auth_system.entity.User;
 import com.saumyproject.jwt_auth_system.repository.UserRepository;
 import com.saumyproject.jwt_auth_system.security.JwtService;;
@@ -23,15 +24,18 @@ public class UserService {
     
     public User registerUser(RegisterRequest request) {
 
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already registered");
+        Role role = Role.USER;
+
+        if (userRepository.count() == 0) {
+            role = Role.ADMIN;
         }
 
         User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .build();
+            .name(request.getName())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .role(role)
+            .build();
 
         return userRepository.save(user);
     }
